@@ -26,5 +26,10 @@ function isActress(data: unknown): data is Actress {
     'death_year' in data && typeof data.death_year === 'number' &&
     'biography' in data && typeof data.biography === 'string' &&
     'image' in data && typeof data.image === 'string' &&
+    // controllo tuple, se è un array se la sua lunghezza è di 3 elementi e se tutti sono dei tipi stringa 
+    'most_famous_movies' in data &&
+    data.most_famous_movies instanceof Array &&
+    data.most_famous_movies.length === 3 &&
+    data.most_famous_movies.every(movie => typeof movie === 'string')
   )
 }
