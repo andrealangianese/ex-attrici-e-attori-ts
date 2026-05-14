@@ -15,8 +15,6 @@ type Actress = Person & {
 
 function isActress(data: unknown): data is Actress {
   return (
-    // dati deve essere vero
-    data &&
     typeof data === 'object' &&
     data !== null &&
     // controllo su tutte le proprietà
@@ -30,6 +28,28 @@ function isActress(data: unknown): data is Actress {
     'most_famous_movies' in data &&
     data.most_famous_movies instanceof Array &&
     data.most_famous_movies.length === 3 &&
-    data.most_famous_movies.every(movie => typeof movie === 'string')
+    data.most_famous_movies.every(movie => typeof movie === 'string') &&
+    'awards' in data && typeof data.awards === 'string' &&
+    'nationality' in data && typeof data.nationality === 'string'
   )
+}
+
+async function getActress(id: number): Promise<Actress | null> {
+  try {
+    const res: Response = await fetch(`http://localhost:3333/actresses/${id}`)
+    const dati: unknown = await res.json()
+    // controllo dei dati, solo dopo il Return, Dati sarà associato ad Actress
+    if (!isActress(dati)) {
+      throw new Error('errore nei dati')
+    }
+    return dati
+  } catch (error) {
+    // controllo error con instanceof se no me lo da di base unknown
+    if (error instanceof Error) {
+      console.error('errore nel caricamento delle attrici');
+    } else {
+      console.error('errore non identificato');
+    }
+    return null
+  }
 }
