@@ -74,3 +74,18 @@ async function getAllActress(): Promise<Actress[]> {
     return []
   }
 }
+
+async function getActresses(ids: number[]): Promise<(Actress | null)[]> {
+  try {
+    const promise = ids.map(id => getActress(id))
+    return await Promise.all(promise)
+  } catch (error) {
+    // controllo error con instanceof se no me lo da di base unknown
+    if (error instanceof Error) {
+      console.error('errore nel caricamento delle attrici');
+    } else {
+      console.error('errore non identificato');
+    }
+    return []
+  }
+}
